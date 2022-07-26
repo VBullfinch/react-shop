@@ -1,10 +1,10 @@
-import {useState, useEffect} from 'react'
-import { API_KEY, API_URL } from '../config'
-import { Preloader } from './Preloader'
-import {GoodsList} from './GoodsList'
-import {Cart} from './Cart'
-import {BasketList} from './BasketList'
-import {Alert} from './Alert'
+import {useState, useEffect} from 'react';
+import { API_KEY, API_URL } from '../config';
+import { Preloader } from './Preloader';
+import {GoodsList} from './GoodsList';
+import {Cart} from './Cart';
+import {BasketList} from './BasketList';
+import {Alert} from './Alert';
 
 function Shop(){
 const [goods, setGoods] = useState([])
@@ -22,14 +22,15 @@ fetch(API_URL, {
     )
     .then((response)=>response.json())
     .then((data)=>{
-        data.shop && setGoods(data.shop);
+        data.featured && setGoods(data.featured);
         setLoading(false);
     });
 }, [])
 
-const addItemToBasketList =(itemId)=>{
+
+const addItemToBasketList =(id)=>{
     const newOrder = order.map((el)=>{
-        if(el.mainId===itemId){
+        if(el.id===id){
             const newQuantity=el.quantity+1;
             
             return  {
@@ -42,9 +43,9 @@ const addItemToBasketList =(itemId)=>{
     })
     setOrder(newOrder)
 }
-const decQuantity = (itemId) =>{
+const decQuantity = (id) =>{
     const newOrder = order.map(el=>{
-        if(el.mainId===itemId){
+        if(el.id===id){
             const newQuantity = el.quantity-1;
             return {
                 ...el,
@@ -57,7 +58,7 @@ const decQuantity = (itemId) =>{
 }
 
     const addToBasket =(item)=>{
-        const itemIndex=order.findIndex(orderItem=> orderItem.mainId===item.mainId)
+        const itemIndex=order.findIndex(orderItem=> orderItem.id===item.id)
         if(itemIndex<0){
         const newItem={
             ...item,
@@ -81,7 +82,7 @@ const decQuantity = (itemId) =>{
         })
         setOrder(newOrder)
     }
-    setAlertName(item.displayName);
+    setAlertName(item.name);
 
     }
 
@@ -89,8 +90,8 @@ const decQuantity = (itemId) =>{
         setIsBasketShow(!isBasketShow)
     }
 
-    const removeFromBasket=(itemId)=>{
-        const newOrder = order.filter(el=>el.mainId!==itemId)
+    const removeFromBasket=(id)=>{
+        const newOrder = order.filter(el=>el.id!==id)
         setOrder(newOrder)
     }
 const closeAlert =()=>{
